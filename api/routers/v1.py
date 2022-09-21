@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from api.routers.v1_routers.message import message_router
+from api.routers.v1_routers.messages import message_router
 
 v1_router = APIRouter(
     prefix='/v1',
