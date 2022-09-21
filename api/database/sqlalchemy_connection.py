@@ -14,4 +14,4 @@ def get_session():
         session.close()
 
 
-Base = declarative_base()
+Base: DeclarativeMeta = declarative_base()

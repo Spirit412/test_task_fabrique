@@ -1,16 +1,18 @@
+import json
 import logging
 from pathlib import Path
-from fastapi import FastAPI
-from fastapi import Request
+
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError, ValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
-import json
+
 from api.config import settings
 from api.routers.v1 import v1_router
-from .costum_logging import CustomizeLogger
-from fastapi.exceptions import RequestValidationError, ValidationError
+
+from .custom_logging import CustomizeLogger
 
 logger = logging.getLogger(__name__)
 config_path = Path(__file__).with_name("logging_config.json")
@@ -57,12 +59,7 @@ async def get_openapi_json(request: Request):
     return JSONResponse(get_openapi(
         title="API",
         version="1.0.0",
-        description="**Апи тестового задания**",
+        description="**openapi.json тестового задания**",
         routes=app.routes
     ))
 
-app.include_router(
-    fastapi_users.get_oauth_router(google_oauth_client, auth_backend, "SECRET"),
-    prefix="/auth/google",
-    tags=["auth"],
-)

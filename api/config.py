@@ -1,7 +1,7 @@
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import BaseSettings
+from pydantic import BaseSettings, HttpUrl
 
 
 class Settings(BaseSettings):
@@ -15,7 +15,8 @@ class Settings(BaseSettings):
     DB_PORT: str
     DB_USER: str
     DB_PASSWORD: str
-    TOKEN_SENDING_SERVICE: str
+    SENDING_API_TOKEN: str
+    SENDING_API_URL: HttpUrl
 
     class Config:
         env_file = Path.cwd() / '.env'

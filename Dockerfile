@@ -1,11 +1,21 @@
-FROM python:3.10
+FROM python:3.10.7-slim-buster
 
-COPY ./alembic /test_task_fabrique/alembic
-COPY ./api /test_task_fabrique/api
-COPY ./tests /test_task_fabrique/tests
-COPY ./requirements.txt /test_task_fabrique
-COPY ./alembic.ini /test_task_fabrique
 
-RUN pip3 install -r /test_task_fabrique/requirements.txt
+WORKDIR /usr/src/test_task_fabrique
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+COPY ./requirements.txt .
+
+RUN apt-get update \
+  && apt-get -y install netcat gcc postgresql \
+  && apt-get clean
+
+RUN pip install --upgrade pip
+
+RUN pip3 install -r requirements.txt
+
+COPY . .
 
 EXPOSE 5050
