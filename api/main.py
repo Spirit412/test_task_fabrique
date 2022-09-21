@@ -60,3 +60,9 @@ async def get_openapi_json(request: Request):
         description="**Апи тестового задания**",
         routes=app.routes
     ))
+
+app.include_router(
+    fastapi_users.get_oauth_router(google_oauth_client, auth_backend, "SECRET"),
+    prefix="/auth/google",
+    tags=["auth"],
+)

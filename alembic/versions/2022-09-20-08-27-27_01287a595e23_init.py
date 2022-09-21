@@ -24,8 +24,18 @@ def upgrade() -> None:
     op.create_table(
         'users',
         sa.Column('id', sa.Integer, primary_key=True, autoincrement=True, nullable=False, unique=True),
-        sa.Column('name', sa.String),
-        sa.Column('password_digest', sa.String),
+        sa.Column('email', sa.String(length=320), unique=True, index=True, nullable=False),
+        sa.Column('hashed_password', sa.String(length=1024), nullable=False),
+        sa.Column('is_active', sa.Boolean, default=True, nullable=False),
+        sa.Column('is_superuser', sa.Boolean, default=False, nullable=False),
+        sa.Column('is_verified', sa.Boolean, default=False, nullable=False),
+        
+        sa.Column('oauth_name', sa.String(length=100), index=True, nullable=False),
+        sa.Column('access_token', sa.String(length=1024), nullable=False),
+        sa.Column('expires_at', sa.Integer, nullable=True),
+        sa.Column('refresh_token', sa.String(length=1024), nullable=True),
+        sa.Column('account_id', sa.String(length=320), index=True, nullable=False),
+        sa.Column('account_email', sa.String(length=320), nullable=False),
     )
 
 ######################################################################

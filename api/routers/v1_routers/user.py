@@ -5,7 +5,7 @@ from api.database.decorators import managed_transaction
 
 from api.schemas.user import *
 from api.schemas.token import *
-from api.auth.auth import get_current_user, AuthService
+from api.auth.auth import get_user_db, AuthService
 
 user_router = APIRouter(
     prefix='/users',
@@ -33,7 +33,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 ##########
 @user_router.get('/me')
 @user_router.get('/me/', include_in_schema=False)
-async def get_user_me(current_user=Depends(get_current_user),
+async def get_user_me(current_user=Depends(get_user_db),
                       ):
     """
     **Получить данные текущего юзера.**

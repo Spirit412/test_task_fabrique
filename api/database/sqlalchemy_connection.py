@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 from api.database.session import Session
 
 

@@ -17,7 +17,7 @@
         "ALGORITHM": "HS256",
         "DB_HOST": "127.0.0.1",
         "DB_DBNAME": "test_task_fabrique",
-        "DB_PORT": "5432",
+        "DB_PORT": "6432",
         "DB_USER": "fastapi",
         "DB_PASSWORD": "fastapi",
         "TOKEN_SENDING_SERVICE": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTUxMjA3MTYsImlzcyI6ImZhYnJpcXVlIiwibmFtZSI6IkFsZWtzYW5kZXJfRG9tODIifQ.g0UzkZeGUnJ8KE-rQ0zG_jTY9SKeXiSxEhobZAbUzGY"
