@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   postgres_db:
-    image: postgres:13-alpine
+    image: postgres:13
     container_name: "${DB_DBNAME}_db"
     build: ./custom-postgres
     restart: unless-stopped
@@ -19,7 +19,7 @@ services:
     env_file:
       - .env
 
-  api_py:
+  api:
     container_name: "${DB_DBNAME}_fastapi"
     build:
       context: .
@@ -50,7 +50,7 @@ services:
       - 'CELERY_BROKER_URL=redis://redis:6379/1'
       - 'CELERY_RESULT_BACKEND=redis://redis:6379/1'
     depends_on:
-      - api_py
+      - api
       - redis
       - worker-beat
 
@@ -68,7 +68,7 @@ services:
       - 'CELERY_BROKER_URL=redis://redis:6379/1'
       - 'CELERY_RESULT_BACKEND=redis://redis:6379/1'
     depends_on:
-      - api_py
+      - api
       - redis
   # # # # # # # # # #
 
@@ -92,7 +92,7 @@ services:
       - 'CELERY_BROKER_URL=redis://redis:6379/1'
       - 'CELERY_RESULT_BACKEND=redis://redis:6379/1'
     depends_on:
-      - api_py
+      - api
       - redis
       - worker
 

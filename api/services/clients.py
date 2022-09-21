@@ -1,12 +1,7 @@
-from datetime import datetime
-from uuid import UUID
-
+from api import schemas
 from api.models import models
-from api.responses.exceptions import raise_logic_exception
 from api.responses.success import DELETED_SUCCESSFULLY
-from api.schemas import schemas
-from fastapi.encoders import jsonable_encoder
-from sqlalchemy import and_, nullslast, or_
+from api.utils.utils import update_model
 from sqlalchemy.orm import Session, joinedload
 
 
@@ -15,7 +10,7 @@ class ClientService:
     def get_one(self, *,
                 session: Session,
                 client_id: int,
-                ) -> schemas.ClientDB:
+                ) -> models.Client:
 
         query = (
             session
@@ -47,12 +42,14 @@ class ClientService:
 
         return query.offset(offset).limit(limit).all()
 
-    def update_model(db_model, model_update):
-        for var, value in vars(model_update).items():
-            if vars(db_model).get(var) is None:
-                continue
-            setattr(db_model, var, value) if value else None
+    def create(self, *,
+               session: Session,
+               schemas_create: schemas.ClientCreate,
+               ) -> models.Message:
+        db_model = models.Client(**schemas_create.dict())
 
+        self.session.add(db_model)
+        session.flush()
         return db_model
 
     def update(self, *,
@@ -62,7 +59,7 @@ class ClientService:
                ) -> models.Client:
 
         model_update = models.Client(**cshema_update.dict(exclude_unset=True))
-        self.update_model(db_model, model_update)
+        update_model(db_model, model_update)
         session.flush()
 
         return db_model

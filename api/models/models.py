@@ -65,7 +65,7 @@ class LoggerActionsEnum(enum.Enum):
     REQUEST = 4
 
 
-class LoggingBase(Base):
+class LoggingBase():
     level = Column(Enum(LoggerLevelsEnum), nullable=False)
     action = Column(Enum(LoggerActionsEnum), nullable=False)
     message_text = Column(String)

@@ -28,14 +28,12 @@ class LogBase(BaseModel):
                         description=f"Доступные значения:\n"
                         f"{enum_elements_to_string(LoggerActionsEnum)}",
                         )
-    message_text: str = Field(...,
-                              default="No Message",
+    message_text: str = Field("No Message",
                               title="Текст лога",
                               )
-    data_json: str = Field(...,
-                           default="{\"error\": \"Example Text\"}",
-                           title="Json строка с дополнительными данными к логу",
-                           )
+    data_json: dict = Field(dict(error="Example Text"),
+                            title="Json строка с дополнительными данными к логу",
+                            )
 
 
 class LogUpdateBase(BaseModel):

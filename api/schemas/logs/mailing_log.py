@@ -1,31 +1,31 @@
 from datetime import datetime
-from typing import ForwardRef
 
 from api.schemas.logs.log_base import LogBase
-from api.schemas.mailing import Mailing, MailingDB
 from pydantic import BaseModel, Field
 
-MailingLogDB = ForwardRef("MailingLogDB")
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from api.schemas.mailing import Mailing  # noqa: F401
+    from api.schemas.mailing import MailingDB  # noqa: F401
 
 
 class MailingLogBase(LogBase):
     pass
 
 
-class MailingLog(MailingLogBase, table=True):
+class MailingLog(MailingLogBase):
     id: int
-    created_at: datetime = Field(...,
-                                 default=datetime.utcnow(),
+    created_at: datetime = Field(datetime.utcnow(),
                                  )
 
     mailing_id: int | None
-    mailing: "Mailing" | None
+    mailing: "Mailing"
 
 
 class MailingLogDB(MailingLogBase):
     id: int
     mailing_id: int | None
-    mailing: "MailingDB" | None
+    mailing: "MailingDB"
 
 
 class MailingLogCreate(MailingLogBase):
@@ -34,6 +34,3 @@ class MailingLogCreate(MailingLogBase):
 
 class MailingLogUpdate(MailingLogBase):
     mailing_id: int | None
-
-
-MailingLogDB.update_forward_refs()

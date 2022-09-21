@@ -1,10 +1,15 @@
 from datetime import datetime
 from typing import ForwardRef
 
-from api.schemas.client import Client, ClientDB
 from api.schemas.logs.log_base import LogBase
 
-ClientLogDB = ForwardRef("ClientLogDB")
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from api.schemas.client import Client  # noqa: F401
+    from api.schemas.client import ClientDB  # noqa: F401
+    from api.schemas.logs.log_base import LogBase  # noqa: F401
+
+
 
 
 class ClientLogBase(LogBase):
@@ -16,14 +21,14 @@ class ClientLog(ClientLogBase):
     created_at: datetime
 
     client_id: int
-    client: "Client" | None
+    client: "Client"
 
 
 class ClientLogDB(ClientLogBase):
     id: int
 
     client_id: int | None
-    client: "ClientDB" | None
+    client: "ClientDB"
 
 
 class ClientLogCreate(ClientLogBase):
@@ -34,4 +39,3 @@ class ClientLogUpdate(ClientLogBase):
     client_id: int | None
 
 
-ClientLogDB.update_forward_refs()

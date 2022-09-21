@@ -1,11 +1,12 @@
-from api.schemas.message import Message, MessageDB
 from datetime import datetime
-from typing import List, Optional
-from typing import ForwardRef
+from typing import TYPE_CHECKING
+
 from api.schemas.logs.log_base import LogBase
 from pydantic import BaseModel, Field
 
-MessageLogDB = ForwardRef("MessageLogDB")
+if TYPE_CHECKING:
+    from api.schemas.message import Message  # noqa: F401
+    from api.schemas.message import MessageDB  # noqa: F401
 
 
 class MessageLogBase(LogBase):
@@ -14,19 +15,18 @@ class MessageLogBase(LogBase):
 
 class MessageLog(MessageLogBase):
     id: int
-    created_at: datetime = Field(...,
-                                 default=datetime.utcnow(),
+    created_at: datetime = Field(datetime.utcnow(),
                                  )
 
     message_id: int | None
-    message: "Message" | None
+    message: "Message"
 
 
 class MessageLogDB(MessageLogBase):
     id: int
 
     message_id: int | None
-    message: "MessageDB" | None
+    message: "MessageDB"
 
 
 class MessageLogCreate(MessageLogBase):
@@ -35,6 +35,3 @@ class MessageLogCreate(MessageLogBase):
 
 class MessageLogUpdate(MessageLogBase):
     message_id: int | None
-
-
-MessageLogDB.update_forward_refs()

@@ -1,10 +1,10 @@
 from datetime import datetime
 from enum import IntEnum
 from typing import ForwardRef
+
 from api.schemas.client import Client, ClientDB
 from api.schemas.logs.message_log import MessageLog
 from api.schemas.mailing import Mailing, MailingDB
-
 from api.utils.utils import enum_elements_to_string
 from pydantic import BaseModel, Field
 
@@ -33,13 +33,13 @@ class Message(MessageBase):
     id: int
     created_at: datetime
 
-    logs: list["MessageLog"]
+    logs: list[MessageLog]
 
     mailing_id: int
-    mailing: "Mailing" | None
+    mailing: Mailing | None
 
     client_id: int
-    client: "Client" | None
+    client: Client | None
 
 
 class MessageDB(MessageBase):
@@ -49,11 +49,11 @@ class MessageDB(MessageBase):
 
 
 class MessageDBWithClient(MessageDB):
-    client: "ClientDB" | None
+    client: ClientDB | None
 
 
 class MessageDBWithMailing(MessageDB):
-    mailing: "MailingDB" | None
+    mailing: MailingDB | None
 
 
 class MessageDBWithAll(MessageDBWithClient, MessageDBWithMailing):

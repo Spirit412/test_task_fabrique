@@ -1,32 +1,30 @@
-from typing import ForwardRef
 
-from api.schemas.logs.client_log import ClientLog
-from api.schemas.message import MessageDB, Message
-from api.schemas.message import MessageDB
+
 from pydantic import BaseModel, Field
 
-ClientDBWithMessages = ForwardRef("ClientDBWithMessages")
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from api.schemas.message import Message  # noqa: F401
+    from api.schemas.message import MessageDB  # noqa: F401
+    from api.schemas.logs.client_log import ClientLog  # noqa: F401
 
 
 class ClientBase(BaseModel):
-    phone_number: str = Field(...,
+    phone_number: str = Field("79211234567",
                               regex=r"^7\d{10}$",
                               description="Мобильный номер вида 7##########",
                               title="Мобильный номер вида 7##########",
-                              default="79211234567",
                               )
-    phone_operator_code: str = Field(...,
+    phone_operator_code: str = Field("921",
                                      regex=r"^\d{3}$",
                                      description="Код оператора",
                                      title="Код оператора",
-                                     default="921",
                                      )
     tag: str | None = Field(None,
                             description="Тэг",
                             title="Тэг",
                             )
-    timezone: str = Field(...,
-                          default="Europe/Moscow",
+    timezone: str = Field("Europe/Moscow",
                           description="Временная зона",
                           title="Временная зона",
                           )
@@ -60,6 +58,3 @@ class ClientUpdate(BaseModel):
     phone_operator_code: str | None
     tag: str | None
     timezone: str | None
-
-
-ClientDBWithMessages.update_forward_refs()

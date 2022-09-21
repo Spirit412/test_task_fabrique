@@ -1,21 +1,31 @@
-FROM python:3.10.7-slim-buster
+FROM python:3.10.7-alpine
 
 
-WORKDIR /usr/src/test_task_fabrique
+WORKDIR /usr/src/app
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-COPY ./requirements.txt .
+COPY ./requirements.txt /usr/src/app/requirements.txt
 
-RUN apt-get update \
-  && apt-get -y install netcat gcc postgresql \
-  && apt-get clean
+
+RUN set -eux \
+    && apk add --no-cache --virtual .build-deps build-base \
+        libressl-dev libffi-dev gcc musl-dev python3-dev \
+        postgresql-dev \
+    && pip install --upgrade pip setuptools wheel \
+    && pip install -r /usr/src/app/requirements.txt \
+    && rm -rf /root/.cache/pip
+
+
+# RUN apt-get update \
+#   && apt-get -y install netcat gcc postgresql \
+#   && apt-get clean
 
 RUN pip install --upgrade pip
 
-RUN pip3 install -r requirements.txt
+RUN pip install -r requirements.txt
 
-COPY . .
+COPY . ./usr/src/app
 
 EXPOSE 5050
