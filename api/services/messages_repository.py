@@ -1,20 +1,12 @@
-from datetime import datetime
-from uuid import UUID
-
 from api.models import models
-from api.responses.exceptions import raise_logic_exception
 from api.responses.success import DELETED_SUCCESSFULLY
-from api import schemas
-from fastapi.encoders import jsonable_encoder
-from sqlalchemy import and_, nullslast, or_
-from sqlalchemy.orm import Session, joinedload
 from api.schemas.mailing import MailingUpdate
 from api.schemas.message import MessageCreate
+from api.utils.models_utils import update_model
+from sqlalchemy.orm import Session, joinedload
 
-from api.utils.utils import update_model
 
-
-class MessageService:
+class MessageRepository:
 
     def get_one(self, *,
                 session: Session,
@@ -77,12 +69,13 @@ class MessageService:
 
         return db_model
 
-    async def delete(self, *,
-                     session: Session,
-                     db_model: models.Message,
-                     ) -> None:
+    def delete(self, *,
+               session: Session,
+               db_model: models.Message,
+               ) -> None:
 
         if len(db_model.logs) != 0:
             db_model.logs.clear()
 
         session.delete(db_model)
+        return DELETED_SUCCESSFULLY

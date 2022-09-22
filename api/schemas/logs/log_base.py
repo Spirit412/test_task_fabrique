@@ -1,6 +1,6 @@
 from enum import IntEnum
 
-from api.utils.utils import enum_elements_to_string
+from api.utils.models_utils import enum_elements_to_string
 from pydantic import BaseModel, Field
 
 

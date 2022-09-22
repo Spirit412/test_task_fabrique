@@ -1,0 +1,20 @@
+{
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+    "diffEditor.codeLens": true,
+    "editor.minimap.autohide": false,
+    "files.autoGuessEncoding": true,
+    "workbench.editor.autoLockGroups": {
+        "jupyter-notebook": true
+    },
+    "workbench.editor.limit.excludeDirty": false,
+    "workbench.editor.limit.perEditorGroup": false,
+    "debug.autoExpandLazyVariables": true,
+    "terminal.integrated.copyOnSelection": true,
+    "terminal.integrated.cursorBlinking": true,
+    "problems.showCurrentInStatus": false,
+    "commentTranslate.hover.concise": true,
+    "commentTranslate.targetLanguage": "ru",
+    "sync.autoUpload": false,
+    "sync.autoDownload": false
+}

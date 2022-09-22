@@ -1,15 +1,11 @@
-from typing import Optional, List
-
+from api.database.sqlalchemy_connection import get_session
+from api.responses import Message
+from api.schemas.client import Client, ClientCreate, ClientDB, ClientUpdate
+from api.services.clients_repository import ClientsRepository
+from api.utils.logger_util import Logger, LoggerActionsEnum, LoggerLevelsEnum
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
-
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from api.database.sqlalchemy_connection import get_session
-from api.schemas.client import ClientCreate, ClientUpdate, Client, ClientDB
-from api.database.repositories.clients_repository import ClientsRepository
-from api.responses import Message
-from api.utils.logger_util import Logger, LoggerLevelsEnum, LoggerActionsEnum
+from sqlalchemy.orm import Session
 
 router = APIRouter(
     prefix="/clients",
@@ -18,8 +14,8 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=List[ClientDB])
-async def get_clients(session: AsyncSession = Depends(get_session)):
+@router.get("/", response_model=list[ClientDB])
+async def get_clients(session: Session = Depends(get_session)):
     """ Получает всех клиентов. """
     clients_repository = ClientsRepository(session)
 
@@ -29,11 +25,11 @@ async def get_clients(session: AsyncSession = Depends(get_session)):
 
 
 @router.get("/{client_id}", response_model=ClientDB, responses={'404': {'model': Message}})
-async def get_client(client_id: int, session: AsyncSession = Depends(get_session)):
+async def get_client(client_id: int, session: Session = Depends(get_session)):
     """ Получает клиента по ID. """
     clients_repository = ClientsRepository(session)
 
-    db_client: Optional[Client] = await clients_repository.get_by_id(client_id)
+    db_client: Client | None = await clients_repository.get_by_id(client_id)
     if db_client is None:
         return JSONResponse(status_code=404, content={'message': f"[ID:{client_id}] Client not found"})
 
@@ -41,7 +37,7 @@ async def get_client(client_id: int, session: AsyncSession = Depends(get_session
 
 
 @router.post("/", response_model=ClientDB)
-async def add_client(client_create: ClientCreate, session: AsyncSession = Depends(get_session)):
+async def add_client(client_create: ClientCreate, session: Session = Depends(get_session)):
     """ Добавляет клиента. """
     logger = Logger(session)
     clients_repository = ClientsRepository(session)
@@ -58,12 +54,12 @@ async def add_client(client_create: ClientCreate, session: AsyncSession = Depend
 
 
 @router.put("/{client_id}", response_model=ClientDB, responses={'404': {'model': Message}})
-async def update_client(client_id: int, client_update: ClientUpdate, session: AsyncSession = Depends(get_session)):
+async def update_client(client_id: int, client_update: ClientUpdate, session: Session = Depends(get_session)):
     """ Обновляет клиента по ID. """
     logger = Logger(session)
     clients_repository = ClientsRepository(session)
 
-    db_client: Optional[Client] = await clients_repository.get_by_id(client_id)
+    db_client: Client | None = await clients_repository.get_by_id(client_id)
     if db_client is None:
         await logger.create_client_log(None, LoggerLevelsEnum.error, LoggerActionsEnum.update,
                                        f"[ID:{client_id}] Client Not Found")
@@ -81,12 +77,12 @@ async def update_client(client_id: int, client_update: ClientUpdate, session: As
 
 
 @router.delete("/{client_id}", responses={'404': {'model': Message}, '200': {'model': Message}})
-async def delete_client(client_id: int, session: AsyncSession = Depends(get_session)):
+async def delete_client(client_id: int, session: Session = Depends(get_session)):
     """ Удаляет клиента по ID. """
     logger = Logger(session)
     clients_repository = ClientsRepository(session)
 
-    db_client: Optional[Client] = await clients_repository.get_by_id(client_id)
+    db_client: Client | None = await clients_repository.get_by_id(client_id)
     if db_client is None:
         await logger.create_client_log(None, LoggerLevelsEnum.error, LoggerActionsEnum.delete,
                                        f"[ID:{client_id}] Client Not Found")

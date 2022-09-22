@@ -5,7 +5,7 @@ from typing import ForwardRef
 from api.schemas.client import Client, ClientDB
 from api.schemas.logs.message_log import MessageLog
 from api.schemas.mailing import Mailing, MailingDB
-from api.utils.utils import enum_elements_to_string
+from api.utils.models_utils import enum_elements_to_string
 from pydantic import BaseModel, Field
 
 MessageDBWithClient = ForwardRef("MessageDBWithClient")

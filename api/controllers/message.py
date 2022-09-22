@@ -1,6 +1,6 @@
 from api import models
 from api.schemas.message import MessageCreate
-from api.services.message import MessageService
+from api.services.messages_repository import MessageRepository
 from api.models import models
 from sqlalchemy.orm import Session
 
@@ -14,7 +14,7 @@ class MessageController:
                        input_data: MessageCreate,
                        ) -> models.Message | None:
 
-        message_service = MessageService()
+        message_service = MessageRepository()
         return message_service.create(session=session,
                                       schemas_create=input_data,
                                       )
@@ -23,6 +23,6 @@ class MessageController:
                 session: Session,
                 message_id: int,
                 ) -> models.Message | None:
-        message_service = MessageService()
+        message_service = MessageRepository()
         return message_service.get_one(session=session,
                                        message_id=message_id)

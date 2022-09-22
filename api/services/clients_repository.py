@@ -1,11 +1,11 @@
 from api import schemas
 from api.models import models
 from api.responses.success import DELETED_SUCCESSFULLY
-from api.utils.utils import update_model
+from api.utils.models_utils import update_model
 from sqlalchemy.orm import Session, joinedload
 
 
-class ClientService:
+class ClientsRepository:
 
     def get_one(self, *,
                 session: Session,
