@@ -3,6 +3,7 @@
     "editor.formatOnType": true,
     "diffEditor.codeLens": true,
     "editor.minimap.autohide": false,
+    "python.terminal.activateEnvironment": true,
     "files.autoGuessEncoding": true,
     "workbench.editor.autoLockGroups": {
         "jupyter-notebook": true
