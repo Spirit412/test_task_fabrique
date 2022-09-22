@@ -21,7 +21,7 @@ async def get_mailings(session: Session = Depends(get_session)):
     """ Получает все рассылки. """
     mailings_repository = MailingsRepository(session)
 
-    db_mailings = await mailings_repository.index()
+    db_mailings = await mailings_repository.get_all()
 
     return db_mailings
 
