@@ -1,8 +1,6 @@
-
-
 from pydantic import BaseModel, Field
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from api.schemas.message import Message  # noqa: F401
     from api.schemas.message import MessageDB  # noqa: F401
@@ -20,10 +18,10 @@ class ClientBase(BaseModel):
                                      description="Код оператора",
                                      title="Код оператора",
                                      )
-    tag: str | None = Field(None,
-                            description="Тэг",
-                            title="Тэг",
-                            )
+    tag: str = Field(...,
+                     description="Тэг",
+                     title="Тэг",
+                     )
     timezone: str = Field("Europe/Moscow",
                           description="Временная зона",
                           title="Временная зона",
@@ -41,12 +39,17 @@ class ClientDB(ClientBase):
     phone_number: str
     phone_operator_code: str
     tag: str
-
     timezone: str
+
+    class Config:
+        orm_mode = True
 
 
 class ClientDBWithMessages(ClientDB):
-    messages: list["MessageDB"] | None
+    messages: Optional[list["MessageDB"]]
+
+    class Config:
+        orm_mode = True
 
 
 class ClientCreate(ClientBase):
@@ -58,3 +61,6 @@ class ClientUpdate(BaseModel):
     phone_operator_code: str | None
     tag: str | None
     timezone: str | None
+
+
+# ClientDBWithMessages.update_forward_refs()

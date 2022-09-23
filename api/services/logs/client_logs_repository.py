@@ -4,6 +4,7 @@ from api.schemas.logs.client_log import (ClientLog, ClientLogCreate,
                                          ClientLogUpdate)
 from api.utils.models_utils import update_model
 from sqlalchemy.orm import Session, joinedload
+from fastapi.encoders import jsonable_encoder
 
 
 class ClientLogsRepository:
@@ -55,7 +56,6 @@ class ClientLogsRepository:
     def create(self,
                model_create: ClientLogCreate,
                ) -> models.ClientLog:
-        db_model = ClientLog.from_orm(model_create)
 
         db_model = models.ClientLog(**model_create.dict())
         self.session.add(db_model)
@@ -70,6 +70,7 @@ class ClientLogsRepository:
         model_update = models.ClientLog(**model_update.dict(exclude_unset=True))
         update_model(db_model, model_update)
         self.session.flush()
+        return db_model
 
     def delete(self,
                db_model: models.ClientLog,

@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from api.schemas.message import Message  # noqa: F401
     from api.schemas.message import MessageDB  # noqa: F401
@@ -52,7 +52,10 @@ class MailingDB(MailingBase):
     sending_end_date: datetime
 
     message_text: str
-    client_filter_json: str
+    client_filter_json: FilterJson
+
+    class Config:
+        orm_mode = True
 
 
 class MailingDBWithMessages(MailingDB):
@@ -69,3 +72,6 @@ class MailingUpdate(BaseModel):
 
     message_text: str | None
     client_filter_json: FilterJson | None
+
+
+# MailingDBWithMessages.update_forward_refs()

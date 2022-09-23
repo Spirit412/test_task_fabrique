@@ -31,8 +31,8 @@ class LogBase(BaseModel):
     message_text: str = Field("No Message",
                               title="Текст лога",
                               )
-    data_json: dict = Field(dict(error="Example Text"),
-                            title="Json строка с дополнительными данными к логу",
+    data_json: dict = Field(...,
+                            title="Json с дополнительными данными к логу",
                             )
 
 
@@ -40,4 +40,4 @@ class LogUpdateBase(BaseModel):
     level: int | None
     action: int | None
     message_text: str | None
-    data_json: str | None
+    data_json: dict | None

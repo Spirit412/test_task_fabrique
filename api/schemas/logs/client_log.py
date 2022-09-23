@@ -10,8 +10,6 @@ if TYPE_CHECKING:
     from api.schemas.logs.log_base import LogBase  # noqa: F401
 
 
-
-
 class ClientLogBase(LogBase):
     pass
 
@@ -23,12 +21,18 @@ class ClientLog(ClientLogBase):
     client_id: int
     client: "Client"
 
+    class Config:
+        orm_mode = True
+
 
 class ClientLogDB(ClientLogBase):
     id: int
 
     client_id: int | None
     client: "ClientDB"
+
+    class Config:
+        orm_mode = True
 
 
 class ClientLogCreate(ClientLogBase):
@@ -39,3 +43,4 @@ class ClientLogUpdate(ClientLogBase):
     client_id: int | None
 
 
+# ClientLogDB.update_forward_refs()

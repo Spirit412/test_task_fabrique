@@ -21,11 +21,17 @@ class MailingLog(MailingLogBase):
     mailing_id: int | None
     mailing: "Mailing"
 
+    class Config:
+        orm_mode = True
+
 
 class MailingLogDB(MailingLogBase):
     id: int
     mailing_id: int | None
     mailing: "MailingDB"
+
+    class Config:
+        orm_mode = True
 
 
 class MailingLogCreate(MailingLogBase):
@@ -34,3 +40,6 @@ class MailingLogCreate(MailingLogBase):
 
 class MailingLogUpdate(MailingLogBase):
     mailing_id: int | None
+
+
+# MailingLogDB.update_forward_refs()

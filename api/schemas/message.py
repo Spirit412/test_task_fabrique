@@ -1,16 +1,14 @@
 from datetime import datetime
 from enum import IntEnum
-from typing import ForwardRef
+from typing import TYPE_CHECKING, Optional
 
-from api.schemas.client import Client, ClientDB
-from api.schemas.logs.message_log import MessageLog
-from api.schemas.mailing import Mailing, MailingDB
 from api.utils.models_utils import enum_elements_to_string
 from pydantic import BaseModel, Field
 
-MessageDBWithClient = ForwardRef("MessageDBWithClient")
-MessageDBWithMailing = ForwardRef("MessageDBWithMailing")
-MessageDBWithAll = ForwardRef("MessageDBWithAll")
+if TYPE_CHECKING:
+    from api.schemas.client import Client, ClientDB  # noqa: F401
+    from api.schemas.logs.message_log import MessageLog  # noqa: F401
+    from api.schemas.mailing import Mailing, MailingDB  # noqa: F401
 
 
 class SendStatusEnum(IntEnum):
@@ -33,13 +31,13 @@ class Message(MessageBase):
     id: int
     created_at: datetime
 
-    logs: list[MessageLog]
+    logs: list["MessageLog"]
 
     mailing_id: int
-    mailing: Mailing | None
+    mailing: Optional["Mailing"]
 
     client_id: int
-    client: Client | None
+    client: Optional["Client"]
 
 
 class MessageDB(MessageBase):
@@ -47,13 +45,22 @@ class MessageDB(MessageBase):
     send_status: str
     created_at: datetime
 
+    class Config:
+        orm_mode = True
+
 
 class MessageDBWithClient(MessageDB):
-    client: ClientDB | None
+    client: Optional["ClientDB"]
+
+    class Config:
+        orm_mode = True
 
 
 class MessageDBWithMailing(MessageDB):
-    mailing: MailingDB | None
+    mailing: Optional["MailingDB"]
+
+    class Config:
+        orm_mode = True
 
 
 class MessageDBWithAll(MessageDBWithClient, MessageDBWithMailing):
@@ -66,12 +73,12 @@ class MessageCreate(MessageBase):
 
 
 class MessageUpdate(BaseModel):
-    send_status: str | None
+    send_status: str | None = None
 
-    mailing_id: str | None
-    client_id: str | None
+    mailing_id: int | None = None
+    client_id: int | None = None
 
 
-MessageDBWithClient.update_forward_refs()
-MessageDBWithMailing.update_forward_refs()
-MessageDBWithAll.update_forward_refs()
+# MessageDBWithClient.update_forward_refs()
+# MessageDBWithMailing.update_forward_refs()
+# MessageDBWithAll.update_forward_refs()

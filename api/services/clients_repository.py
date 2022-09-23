@@ -1,5 +1,5 @@
 from api.models import models
-from api.responses.exceptions import raise_client_not_found
+from api.responses.json_response import raise_client_not_found
 from api.responses.success import DELETED_SUCCESSFULLY, DELETED_NOT_SUCCESSFULLY
 from api.schemas.client import ClientCreate, ClientUpdate
 from api.utils.models_utils import update_model
@@ -50,20 +50,18 @@ class ClientsRepository:
         query = (
             self.session
             .query(models.Client)
+            .filter(models.Client.id == model_id)
+            .options(joinedload(models.Client.messages))
+            .options(joinedload(models.Client.logs))
         )
-        query = query.options(joinedload(models.Client.messages))
-        query = query.options(joinedload(models.Client.logs))
-
-        query = query.filter(models.Client.id == model_id)
         execute = self.session.execute(query)
-
         return execute.scalar_one_or_none()
 
     def create(self,
                model_create: ClientCreate,
                ) -> models.Message:
 
-        db_model: models.Client = models.Client(**model_create.dict())
+        db_model = models.Client(**model_create.dict())
         self.session.add(db_model)
         self.session.flush()
         return db_model
@@ -73,7 +71,7 @@ class ClientsRepository:
                model_update: ClientUpdate,
                ) -> models.Client:
 
-        model_update: models.Client = models.Client(**model_update.dict(exclude_unset=True))
+        model_update = models.Client(**model_update.dict(exclude_unset=True))
         update_model(db_model, model_update)
         self.session.flush()
         return db_model

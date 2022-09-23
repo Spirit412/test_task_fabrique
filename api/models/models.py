@@ -13,14 +13,14 @@ metadata = Base.metadata
 class Client(Base):
     __tablename__ = "clients"
     id = Column(Integer, primary_key=True, index=True)
-    phone_number = Column(String(length=11))  # телефонный номер 11 символов 7XXXXXXXXXX
-    phone_operator_code = Column(String(length=3), default="921")  # Рассматриваем операторов с трехзначным кодом
-    teg = Column(String())
-    timezone = Column(String(), default="Europe/Moscow")  # +12... 0... -12
+    phone_number = Column(String(length=11), nullable=False)  # телефонный номер 11 символов 7XXXXXXXXXX
+    phone_operator_code = Column(String(), default="921", nullable=False)  # Рассматриваем операторов с трехзначным кодом
+    tag = Column(String(), nullable=False)
+    timezone = Column(String(), default="Europe/Moscow", nullable=False)  # +12... 0... -12
 
     # RELLATION
-    messages = relationship("Message", back_populates="client", lazy="dynamic")
-    logs = relationship("ClientLog", back_populates="client", lazy="dynamic")
+    messages = relationship("Message", back_populates="client")
+    logs = relationship("ClientLog", back_populates="client")
 
 
 class Message(Base):
@@ -29,13 +29,13 @@ class Message(Base):
     created_at = Column(DateTime(), default=datetime.utcnow)
     send_status = Column(Integer, nullable=False)
     # RELLATION
-    logs = relationship("MessageLog", back_populates="messages", lazy="dynamic")
+    logs = relationship("MessageLog", back_populates="message")
 
     mailing_id = Column(Integer, ForeignKey("mailings.id"))
-    mailing = relationship("Mailing", back_populates="messages", lazy="dynamic")
+    mailing = relationship("Mailing", back_populates="messages")
 
     client_id = Column(Integer, ForeignKey("clients.id"))
-    client = relationship("Client", back_populates="messages", lazy="dynamic")
+    client = relationship("Client", back_populates="messages")
 
 
 class Mailing(Base):
@@ -46,8 +46,8 @@ class Mailing(Base):
     message_text = Column(Text, nullable=True)
     client_filter_json = Column(JSONB, default={})
     # RELLATION
-    messages = relationship("Message", back_populates="mailings", lazy="dynamic")
-    logs = relationship("MailingLog", back_populates="mailings", lazy="dynamic")
+    messages = relationship("Message", back_populates="mailing")
+    logs = relationship("MailingLog", back_populates="mailing")
 
 
 # # # # # # # # # # # # # # LOGS  # # # # # # # # # # # # # # #
@@ -68,8 +68,8 @@ class LoggerActionsEnum(enum.Enum):
 
 
 class LogBase():
-    level = Column(Enum(LoggerLevelsEnum), nullable=False)
-    action = Column(Enum(LoggerActionsEnum), nullable=False)
+    level = Column(Integer, nullable=False)
+    action = Column(Integer, nullable=False)
     message_text = Column(String)
     data_json = Column(JSONB, default={})
     created_at = Column(DateTime(), default=datetime.utcnow)
@@ -79,6 +79,7 @@ class MailingLog(Base, LogBase):
     __tablename__ = "logs_mailings"
     id = Column(Integer, primary_key=True, index=True)
     mailing_id = Column(Integer, ForeignKey("mailings.id"))
+    mailing = relationship("Mailing", back_populates="logs")
 
 
 class ClientLog(Base, LogBase):
@@ -86,11 +87,13 @@ class ClientLog(Base, LogBase):
     id = Column(Integer, primary_key=True, index=True)
     client_id = Column(Integer, ForeignKey("clients.id"))
     # RELLATION
-    client = relationship("Client", back_populates="logs_clients", lazy="dynamic")
+    client = relationship("Client", back_populates="logs")
 
 
 class MessageLog(Base, LogBase):
     __tablename__ = "logs_messages"
     id = Column(Integer, primary_key=True, index=True)
     message_id = Column(Integer, ForeignKey("messages.id"))
+
     # RELLATION
+    message = relationship("Message", back_populates="logs")

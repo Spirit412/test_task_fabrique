@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from api.config import settings
-from api.responses.exceptions import ERROR_CONNECT_DB
+from api.responses.json_response import ERROR_CONNECT_DB
 
 # LOGGING DB логгер БД
 db_log_file_name = Path.cwd() / 'api/sqlalchemy.log'
@@ -29,8 +29,9 @@ try:
     )
 
     Session = sessionmaker(autocommit=False,
-                           # autoflush=False,
+                        #    autoflush=False,
                            bind=alchemy_engine,
-                           expire_on_commit=False)
+                           expire_on_commit=False,
+                           )
 except Exception as e:
     ERROR_CONNECT_DB
