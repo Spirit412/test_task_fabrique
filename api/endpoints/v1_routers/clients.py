@@ -30,7 +30,7 @@ def get_client(client_id: int,
     """ Получает клиента по ID. """
     client_controllers = ClientControllers(session)
 
-    return client_controllers.get_by_id(client_id=client_id)
+    return client_controllers.get_by_id(get_by_id=client_id)
 
 
 @ router.post("/", response_model=ClientDB)

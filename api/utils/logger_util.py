@@ -25,43 +25,66 @@ class Logger:
         self._mailings_logs_repository = MailingsLogsRepository(session)
         self._messages_logs_repository = MessagesLogsRepository(session)
 
-    async def create_client_log(self, client_id: int | None, level: LoggerLevelsEnum, action: LoggerActionsEnum,
-                                message_text: str, data: dict = {}):
+    async def create_client_log(self,
+                                client_id: int | None,
+                                level: LoggerLevelsEnum,
+                                action: LoggerActionsEnum,
+                                message_text: str, data: dict = {},
+                                ):
         """
         Создаёт лог связанный с изменениями клиента
         """
 
         log_create = ClientLogCreate(
-            client_id=client_id, level=int(level), action=int(action),
-            message_text=message_text, data_json=json.dumps(data)
+            client_id=client_id,
+            level=int(level),
+            action=int(action),
+            message_text=message_text,
+            data_json=json.dumps(data)
         )
 
         self._client_logs_repository.create(log_create)
         await self._client_logs_repository.commit()
 
-    async def create_mailing_log(self, mailing_id: int | None, level: LoggerLevelsEnum, action: LoggerActionsEnum,
-                                 message_text: str, data: dict = {}):
+    async def create_mailing_log(self,
+                                 mailing_id: int | None,
+                                 level: LoggerLevelsEnum,
+                                 action: LoggerActionsEnum,
+                                 message_text: str,
+                                 data: dict = {},
+                                 ):
         """
         Создаёт лог связанный с изменениями клиента
         """
 
         log_create = MailingLogCreate(
-            mailing_id=mailing_id, level=int(level), action=int(action),
-            message_text=message_text, data_json=json.dumps(data)
+            mailing_id=mailing_id,
+            level=int(level),
+            action=int(action),
+            message_text=message_text,
+            data_json=json.dumps(data),
         )
 
         self._mailings_logs_repository.create(log_create)
         await self._mailings_logs_repository.commit()
 
-    async def create_message_log(self, message_id: int | None, level: LoggerLevelsEnum, action: LoggerActionsEnum,
-                                 message_text: str, data: dict = {}):
+    async def create_message_log(self,
+                                 message_id: int | None,
+                                 level: LoggerLevelsEnum,
+                                 action: LoggerActionsEnum,
+                                 message_text: str,
+                                 data: dict = {},
+                                 ):
         """
         Создаёт лог связанный с изменениями клиента
         """
 
         log_create = MessageLogCreate(
-            message_id=message_id, level=int(level), action=int(action),
-            message_text=message_text, data_json=json.dumps(data)
+            message_id=message_id,
+            level=int(level),
+            action=int(action),
+            message_text=message_text,
+            data_json=json.dumps(data),
         )
 
         self._messages_logs_repository.create(log_create)

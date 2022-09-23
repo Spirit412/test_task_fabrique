@@ -63,7 +63,7 @@ class ClientsRepository:
                model_create: ClientCreate,
                ) -> models.Message:
 
-        db_model = models.Client(**model_create.dict())
+        db_model: models.Client = models.Client(**model_create.dict())
         self.session.add(db_model)
         self.session.flush()
         return db_model
@@ -73,7 +73,7 @@ class ClientsRepository:
                model_update: ClientUpdate,
                ) -> models.Client:
 
-        model_update = models.Client(**model_update.dict(exclude_unset=True))
+        model_update: models.Client = models.Client(**model_update.dict(exclude_unset=True))
         update_model(db_model, model_update)
         self.session.flush()
         return db_model
