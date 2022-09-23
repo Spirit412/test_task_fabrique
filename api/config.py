@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     SENDING_API_TOKEN: str
     SENDING_API_URL: HttpUrl
+    CELERY_BROKER_URL: str
+    CELERY_RESULT_BACKEND: str
 
     class Config:
         env_file = Path.cwd() / '.env'

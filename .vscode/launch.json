@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Python: FastAPI",
+      "name": "FASTAPI FABRIQUE",
       "type": "python",
       "request": "launch",
       "module": "uvicorn",
@@ -20,6 +20,8 @@
         "DB_PORT": "6432",
         "DB_USER": "fastapi",
         "DB_PASSWORD": "fastapi",
+        "CELERY_BROKER_URL": "127.0.0.1: 6379/1",
+        "CELERY_RESULT_BACKEND": "127.0.0.1: 6379/1",
         "TOKEN_SENDING_SERVICE": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTUxMjA3MTYsImlzcyI6ImZhYnJpcXVlIiwibmFtZSI6IkFsZWtzYW5kZXJfRG9tODIifQ.g0UzkZeGUnJ8KE-rQ0zG_jTY9SKeXiSxEhobZAbUzGY"
       },
       "args": [
