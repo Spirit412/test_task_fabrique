@@ -17,5 +17,6 @@
     "commentTranslate.hover.concise": true,
     "commentTranslate.targetLanguage": "ru",
     "sync.autoUpload": false,
-    "sync.autoDownload": false
+    "sync.autoDownload": false,
+    "python.formatting.provider": "autopep8"
 }

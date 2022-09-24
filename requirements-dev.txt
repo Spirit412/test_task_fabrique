@@ -6,3 +6,6 @@ flake8-commas
 flake8-variables-names
 flake8_docstrings
 flake8-quotes
+
+autoflake8
+autopep8

@@ -1,6 +1,5 @@
-from fastapi import APIRouter
-
 from api.endpoints.v1_routers import clients, logs, mailings, messages
+from fastapi import APIRouter
 
 v1_router = APIRouter(
     prefix='/v1',
@@ -12,4 +11,4 @@ v1_router = APIRouter(
 v1_router.include_router(clients.router)
 # v1_router.include_router(mailings.router)
 # v1_router.include_router(messages.router)
-# v1_router.include_router(logs.router)
+v1_router.include_router(logs.router)

@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from api.models import models
 from api.responses.json_response import client_deleted_successfully, raise_client_not_found
 from api.responses.success import DELETED_SUCCESSFULLY
-from api.schemas.client import ClientCreate, ClientDB, ClientUpdate
+from api.schemas.client import ClientCreate, ClientUpdate
 from api.utils.logger_util import Logger, LoggerActionsEnum, LoggerLevelsEnum
 from api.services.clients_repository import ClientsRepository
 
@@ -47,25 +47,26 @@ class ClientControllers:
                ):
 
         db_client: models.Client | None = self.clients_repository.get_by_id(model_id=client_id)
-        if db_client is None:
+        if db_client:
+            db_client = self.clients_repository.update(db_model=db_client,
+                                                       model_update=client_update,
+                                                       )
+
+            self.logger.create_client_log(client_id=db_client.id,
+                                          level=LoggerLevelsEnum.DEBUG,
+                                          action=LoggerActionsEnum.UPDATE,
+                                          message_text=f"ID:{client_id} Client Updated",
+                                          )
+
+            return db_client
+
+        else:
             self.logger.create_client_log(client_id=None,
                                           level=LoggerLevelsEnum.ERROR,
                                           action=LoggerActionsEnum.UPDATE,
-                                          message_text=f"[ID:{client_id}] Client Not Found")
+                                          message_text=f"ID:{client_id} Client Not Found")
 
             raise_client_not_found(client_id=client_id)
-
-        db_client = self.clients_repository.update(db_model=db_client,
-                                                   model_update=client_update,
-                                                   )
-
-        self.logger.create_client_log(client_id=db_client.id,
-                                      level=LoggerLevelsEnum.DEBUG,
-                                      action=LoggerActionsEnum.UPDATE,
-                                      message_text=f"[ID:{client_id}] Client Updated",
-                                      )
-
-        return db_client
 
     def delete(self,
                client_id: int,
@@ -73,17 +74,19 @@ class ClientControllers:
 
         db_client: models.Client | None = self.clients_repository.get_by_id(model_id=client_id)
 
-        if db_client is None:
+        if db_client:
+            self.clients_repository.delete(db_client)
+            self.logger.create_client_log(client_id=db_client.id,
+                                          level=LoggerLevelsEnum.DEBUG,
+                                          action=LoggerActionsEnum.DELETE,
+                                          message_text=f"ID:{client_id} Client Deleted",
+                                          )
+            client_deleted_successfully(client_id=client_id)
+
+        else:
             self.logger.create_client_log(client_id=None,
                                           level=LoggerLevelsEnum.ERROR,
                                           action=LoggerActionsEnum.DELETE,
-                                          message_text=f"[ID:{client_id}] Client Not Found")
+                                          message_text=f"ID:{client_id} Client Not Found")
 
             raise_client_not_found(client_id=client_id)
-        self.logger.create_client_log(client_id=db_client.id,
-                                      level=LoggerLevelsEnum.DEBUG,
-                                      action=LoggerActionsEnum.DELETE,
-                                      message_text=f"[ID:{client_id}] Client Deleted",
-                                      )
-
-        return client_deleted_successfully(client_id=client_id)

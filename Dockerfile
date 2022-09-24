@@ -1,31 +1,21 @@
-FROM python:3.10.7-alpine
-
+FROM python:3.10.7
 
 WORKDIR /usr/src/app
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc
+
+COPY ./alembic /usr/src/app/alembic
+COPY ./api /usr/src/app/api
+COPY ./requirements.txt /usr/src/app
+COPY ./alembic.ini /usr/src/app/alembic.ini
 COPY ./requirements.txt /usr/src/app/requirements.txt
-
-
-RUN set -eux \
-    && apk add --no-cache --virtual .build-deps build-base \
-        libressl-dev libffi-dev gcc musl-dev python3-dev \
-        postgresql-dev \
-    && pip install --upgrade pip setuptools wheel \
-    && pip install -r /usr/src/app/requirements.txt \
-    && rm -rf /root/.cache/pip
-
-
-# RUN apt-get update \
-#   && apt-get -y install netcat gcc postgresql \
-#   && apt-get clean
-
 RUN pip install --upgrade pip
-
-RUN pip install -r requirements.txt
-
+RUN pip install -r /usr/src/app/requirements.txt
 COPY . ./usr/src/app
+
 
 EXPOSE 5050
