@@ -9,6 +9,6 @@ v1_router = APIRouter(
 )
 
 v1_router.include_router(clients.router)
-# v1_router.include_router(mailings.router)
+v1_router.include_router(mailings.router)
 # v1_router.include_router(messages.router)
-v1_router.include_router(logs.router)
+# v1_router.include_router(logs.router)

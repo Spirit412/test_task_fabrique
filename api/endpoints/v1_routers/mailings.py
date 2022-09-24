@@ -1,10 +1,8 @@
 from api.controllers.mailings_controllers import MailingsControllers
 from api.database.decorators import managed_transaction
 from api.database.sqlalchemy_connection import get_session
-from api.schemas.mailing import (Mailing, MailingCreate, MailingDB,
+from api.schemas.mailing import (MailingCreate, MailingDB,
                                  MailingUpdate)
-from api.services.mailings_repository import MailingsRepository
-from api.utils.logger_util import Logger, LoggerActionsEnum, LoggerLevelsEnum
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 

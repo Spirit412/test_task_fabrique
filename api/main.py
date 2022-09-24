@@ -100,10 +100,10 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 
 @app.get("/v1/openapi.json")
-async def get_openapi_json(request: Request):
+def get_openapi_json(request: Request):
     return JSONResponse(get_openapi(
         title="API",
         version="1.0.0",
         description="**openapi.json тестового задания**",
-        routes=app.routes,
+        routes=app.routes
     ))
