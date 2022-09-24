@@ -18,8 +18,8 @@ router = APIRouter(
 def get_clients(session: Session = Depends(get_session),
                 ):
     """ Получает список всех клиентов. """
-    client_controllers = ClientControllers(session)
 
+    client_controllers = ClientControllers(session)
     return client_controllers.get_all()
 
 
@@ -28,19 +28,19 @@ def get_client(client_id: int,
                session: Session = Depends(get_session),
                ):
     """ Получает клиента по ID. """
-    client_controllers = ClientControllers(session)
 
+    client_controllers = ClientControllers(session)
     return client_controllers.get_by_id(get_by_id=client_id)
 
 
-@ router.post("/", response_model=ClientDB)
+@ router.post("/")
 @managed_transaction
 def add_client(client_create: ClientCreate,
                session: Session = Depends(get_session),
                ):
     """ Добавляет клиента. """
-    client_controllers = ClientControllers(session)
 
+    client_controllers = ClientControllers(session)
     return client_controllers.create(model_create=client_create)
 
 
@@ -51,48 +51,20 @@ def update_client(client_id: int,
                   session: Session = Depends(get_session),
                   ):
     """ Обновляет клиента по ID. """
-    logger = Logger(session)
-    clients_repository = ClientsRepository(session)
 
-    db_client: Optional[Client] = clients_repository.get_by_id(client_id)
-    if db_client is None:
-        logger.create_client_log(None,
-                                 LoggerLevelsEnum.ERROR,
-                                 LoggerActionsEnum.UPDATE,
-                                 f"[ID:{client_id}] Client Not Found")
-        return JSONResponse(status_code=404, content={'message': f"[ID:{client_id}] Client not found"})
-
-    db_client = clients_repository.update(db_client, client_update)
-
-    clients_repository.commit()
-    clients_repository.refresh(db_client)
-
-    logger.create_client_log(db_client.id,
-                             LoggerLevelsEnum.DEBUG,
-                             LoggerActionsEnum.UPDATE,
-                             f"[ID:{client_id}] Client Updated")
-
-    return db_client
+    client_controllers = ClientControllers(session)
+    return client_controllers.update(client_id=client_id,
+                                     client_update=client_update,
+                                     )
 
 
-@router.delete("/{client_id}", responses={'404': {'model': Message}, '200': {'model': Message}})
+@router.delete("/{client_id}")
 @managed_transaction
-def delete_client(client_id: int, session: Session = Depends(get_session),
+def delete_client(client_id: int,
+                  session: Session = Depends(get_session),
                   ):
     """ Удаляет клиента по ID. """
-    logger = Logger(session)
-    clients_repository = ClientsRepository(session)
 
-    db_client: Optional[Client] = clients_repository.get_by_id(client_id)
-    if db_client is None:
-        logger.create_client_log(None, LoggerLevelsEnum.ERROR, LoggerActionsEnum.DELETE,
-                                 f"[ID:{client_id}] Client Not Found")
-        return JSONResponse(status_code=404, content={'message': f"[ID:{client_id}] Client not found"})
-
-    clients_repository.delete(db_client)
-    clients_repository.commit()
-
-    logger.create_client_log(None, LoggerLevelsEnum.DEBUG, LoggerActionsEnum.DELETE,
-                             f"[ID:{client_id}] Client Deleted")
-
-    return JSONResponse(status_code=200, content={'message': f'[ID:{client_id}] Client deleted successfully'})
+    client_controllers = ClientControllers(session)
+    return client_controllers.delete(client_id=client_id,
+                                     )
