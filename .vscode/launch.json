@@ -43,7 +43,7 @@
         "5.0"
       ],
       "jinja": false,
-      "justMyCode": false
+      "justMyCode": true
     }
   ]
 }
