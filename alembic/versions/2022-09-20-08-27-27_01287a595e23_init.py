@@ -27,7 +27,7 @@ def upgrade() -> None:
         sa.Column('phone_number', sa.String(length=11), nullable=True, unique=True),
         sa.Column('phone_operator_code', sa.String(), nullable=False),
         sa.Column('tag', sa.String(), nullable=False),
-        sa.Column('timezone', sa.String(length=3), nullable=False),
+        sa.Column('timezone', sa.String(), nullable=False),
         sa.PrimaryKeyConstraint('id')
     )
 
