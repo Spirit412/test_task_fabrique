@@ -1,9 +1,9 @@
+from __future__ import annotations
 from pydantic import BaseModel, Field
 
 from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
-    from api.schemas.message import Message  # noqa: F401
-    from api.schemas.message import MessageDB  # noqa: F401
+    from api.schemas.message import Message, MessageDB  # noqa: F401
     from api.schemas.logs.client_log import ClientLog  # noqa: F401
 
 
@@ -63,4 +63,7 @@ class ClientUpdate(BaseModel):
     timezone: str | None
 
 
-# ClientDBWithMessages.update_forward_refs()
+from api.schemas.message import Message, MessageDB  # noqa: F401, E402, F811
+from api.schemas.logs.client_log import ClientLog  # noqa: F401, E402, F811
+
+ClientDBWithMessages.update_forward_refs()

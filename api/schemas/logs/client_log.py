@@ -1,12 +1,12 @@
+from __future__ import annotations
 from datetime import datetime
-from typing import ForwardRef
+# from typing import ForwardRef
 
 from api.schemas.logs.log_base import LogBase
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from api.schemas.client import Client  # noqa: F401
-    from api.schemas.client import ClientDB  # noqa: F401
+    from api.schemas.client import Client, ClientDB  # noqa: F401
     from api.schemas.logs.log_base import LogBase  # noqa: F401
 
 
@@ -43,4 +43,7 @@ class ClientLogUpdate(ClientLogBase):
     client_id: int | None
 
 
-# ClientLogDB.update_forward_refs()
+from api.schemas.client import Client, ClientDB  # noqa: F401, E402, F811
+from api.schemas.logs.log_base import LogBase  # noqa: F401, E402, F811
+
+ClientLogDB.update_forward_refs()

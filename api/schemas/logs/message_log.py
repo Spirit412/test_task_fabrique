@@ -1,3 +1,4 @@
+from __future__ import annotations
 from datetime import datetime
 
 from api.schemas.logs.log_base import LogBase
@@ -5,8 +6,7 @@ from pydantic import BaseModel, Field
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from api.schemas.message import Message  # noqa: F401
-    from api.schemas.message import MessageDB  # noqa: F401
+    from api.schemas.message import Message, MessageDB  # noqa: F401
 
 
 class MessageLogBase(LogBase):
@@ -43,4 +43,6 @@ class MessageLogUpdate(MessageLogBase):
     message_id: int | None
 
 
-# MessageLogDB.update_forward_refs()
+from api.schemas.message import Message, MessageDB  # noqa: F401, E402, F811
+
+MessageLogDB.update_forward_refs()

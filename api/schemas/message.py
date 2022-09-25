@@ -1,3 +1,4 @@
+from __future__ import annotations
 from datetime import datetime
 from enum import IntEnum
 from typing import TYPE_CHECKING, Optional
@@ -79,6 +80,11 @@ class MessageUpdate(BaseModel):
     client_id: int | None = None
 
 
-# MessageDBWithClient.update_forward_refs()
-# MessageDBWithMailing.update_forward_refs()
-# MessageDBWithAll.update_forward_refs()
+from api.schemas.client import Client, ClientDB  # noqa: F401, E402, F811
+from api.schemas.logs.message_log import MessageLog  # noqa: F401, E402, F811
+from api.schemas.mailing import Mailing, MailingDB  # noqa: F401, E402, F811
+
+
+MessageDBWithClient.update_forward_refs()
+MessageDBWithMailing.update_forward_refs()
+MessageDBWithAll.update_forward_refs()

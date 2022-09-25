@@ -1,3 +1,4 @@
+from __future__ import annotations
 from enum import IntEnum
 
 from api.utils.models_utils import enum_elements_to_string
