@@ -1,9 +1,12 @@
 from api.models import models
-from api.responses.json_response import raise_client_not_found
+from api.responses.json_response import raise_client_not_found, raise_db_exc
 from api.responses.success import DELETED_SUCCESSFULLY, DELETED_NOT_SUCCESSFULLY
 from api.schemas.client import ClientCreate, ClientUpdate
 from api.utils.models_utils import update_model
 from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import exc
+from psycopg2 import errors
+import re
 
 
 class ClientsRepository:
@@ -62,8 +65,17 @@ class ClientsRepository:
                ) -> models.Message:
 
         db_model = models.Client(**model_create.dict())
-        self.session.add(db_model)
-        self.session.flush()
+        try:
+            self.session.add(db_model)
+            self.session.flush()
+        except errors.UniqueViolation as e2:
+            print("= " * 20)
+            print(e2.DETAIL)
+            print("= " * 20)
+            self.session.rollback()
+            return None
+        except exc.IntegrityError as e1:
+            raise_db_exc(re.sub("DETAIL:  ", "", str(e1).split('\n')[1]))
         return db_model
 
     def update(self,
@@ -71,9 +83,20 @@ class ClientsRepository:
                model_update: ClientUpdate,
                ) -> models.Client:
 
-        model_update = models.Client(**model_update.dict(exclude_unset=True))
-        update_model(db_model, model_update)
-        self.session.flush()
+        # model_update = models.Client(**model_update.dict(exclude_unset=True))
+        update_model(db_model=db_model, model_update=model_update)
+        try:
+            self.session.flush()
+        except exc.IntegrityError as e1:
+            print("= " * 20)
+            print(e1)
+            print("= " * 20)
+            self.session.rollback()
+        except errors.UniqueViolation as e2:
+            print("= " * 20)
+            print(e2)
+            print("= " * 20)
+            self.session.rollback()
         return db_model
 
     def delete(self,

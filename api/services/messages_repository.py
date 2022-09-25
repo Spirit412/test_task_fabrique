@@ -75,8 +75,8 @@ class MessagesRepository:
                schema_update: MailingUpdate,
                ) -> models.Message:
 
-        model_update = models.Message(**schema_update.dict(exclude_unset=True))
-        update_model(db_model, model_update)
+        # model_update = models.Message(**schema_update.dict(exclude_unset=True))
+        update_model(db_model, schema_update)
         self.session.flush()
         return db_model
 

@@ -66,7 +66,7 @@ class MessagesLogsRepository:
                model_update: MessageLogUpdate,
                ) -> models.MessageLog:
 
-        model_update = models.MessageLog(**model_update.dict(exclude_unset=True))
+        # model_update = models.MessageLog(**model_update.dict(exclude_unset=True))
         update_model(db_model, model_update)
         self.session.flush()
 

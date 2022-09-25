@@ -4,7 +4,7 @@ from uvicorn import run
 LOGGING_CONFIG["formatters"]["default"]["fmt"] = "%(asctime)s %(levelprefix)s %(message)s"
 if __name__ == "__main__":
     run("api.main:app",
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=5050,
         reload=True,
         log_level="info",

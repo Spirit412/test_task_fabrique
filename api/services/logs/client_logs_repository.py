@@ -67,7 +67,7 @@ class ClientLogsRepository:
                model_update: ClientLogUpdate,
                ) -> models.ClientLog:
 
-        model_update = models.ClientLog(**model_update.dict(exclude_unset=True))
+        # model_update = models.ClientLog(**model_update.dict(exclude_unset=True))
         update_model(db_model, model_update)
         self.session.flush()
         return db_model

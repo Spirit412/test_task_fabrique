@@ -1,9 +1,7 @@
 from api.controllers.client_controllers import ClientControllers
 from api.database.decorators import managed_transaction
 from api.database.sqlalchemy_connection import get_session
-from api.schemas.client import Client, ClientCreate, ClientDB, ClientUpdate
-from api.services.clients_repository import ClientsRepository
-from api.utils.logger_util import Logger, LoggerActionsEnum, LoggerLevelsEnum
+from api.schemas.client import ClientCreate, ClientDB, ClientUpdate
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -33,7 +31,7 @@ def get_client(client_id: int,
     return client_controllers.get_by_id(get_by_id=client_id)
 
 
-@ router.post("/")
+@router.post("/")
 @managed_transaction
 def add_client(client_create: ClientCreate,
                session: Session = Depends(get_session),
@@ -44,7 +42,7 @@ def add_client(client_create: ClientCreate,
     return client_controllers.create(model_create=client_create)
 
 
-@router.put("/{client_id}", response_model=ClientDB)
+@ router.put("/{client_id}", response_model=ClientDB)
 @managed_transaction
 def update_client(client_id: int,
                   client_update: ClientUpdate,
@@ -58,8 +56,8 @@ def update_client(client_id: int,
                                      )
 
 
-@router.delete("/{client_id}")
-@managed_transaction
+@ router.delete("/{client_id}")
+@ managed_transaction
 def delete_client(client_id: int,
                   session: Session = Depends(get_session),
                   ):

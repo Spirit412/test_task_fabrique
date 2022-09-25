@@ -5,6 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "FASTAPI DEBUG_SERVER",
+      "type": "python",
+      "request": "launch",
+      "program": "debug_server.py",
+      "console": "integratedTerminal",
+      "autoReload": {
+          "enable": true
+      },
+    },
+    {
       "name": "FASTAPI FABRIQUE",
       "type": "python",
       "request": "launch",

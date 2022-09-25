@@ -51,7 +51,7 @@ class ClientControllers:
             db_client = self.clients_repository.update(db_model=db_client,
                                                        model_update=client_update,
                                                        )
-
+            self.session.commit()
             self.logger.create_client_log(client_id=db_client.id,
                                           level=LoggerLevelsEnum.DEBUG,
                                           action=LoggerActionsEnum.UPDATE,

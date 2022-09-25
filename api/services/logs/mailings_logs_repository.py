@@ -66,7 +66,7 @@ class MailingsLogsRepository:
                model_update: MailingLogUpdate,
                ) -> models.MailingLog:
 
-        model_update = models.MailingLog(**model_update.dict(exclude_unset=True))
+        # model_update = models.MailingLog(**model_update.dict(exclude_unset=True))
         update_model(db_model, model_update)
         self.session.flush()
 

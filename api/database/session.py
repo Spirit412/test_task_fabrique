@@ -29,9 +29,9 @@ try:
     )
 
     Session = sessionmaker(autocommit=False,
-                        #    autoflush=False,
-                           bind=alchemy_engine,
+                           autoflush=False,
                            expire_on_commit=False,
+                           bind=alchemy_engine,
                            )
 except Exception as e:
     ERROR_CONNECT_DB

@@ -68,7 +68,7 @@ class MailingsRepository:
                model_update: MailingUpdate,
                ) -> models.Mailing:
 
-        model_update = models.Mailing(**model_update.dict(exclude_unset=True))
+        # model_update = models.Mailing(**model_update.dict(exclude_unset=True))
         update_model(db_model, model_update)
         self.session.add(db_model)
         self.session.flush()
