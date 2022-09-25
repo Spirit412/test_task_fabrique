@@ -44,7 +44,7 @@ def add_client(client_create: ClientCreate,
     return client_controllers.create(model_create=client_create)
 
 
-@ router.put("/{client_id}", response_model=ClientDB)
+@router.put("/{client_id}", response_model=ClientDB)
 @managed_transaction
 def update_client(client_id: int,
                   client_update: ClientUpdate,
