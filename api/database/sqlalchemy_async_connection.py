@@ -1,24 +1,40 @@
-# from fastapi import HTTPException
-# from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
-# from api.database.async_session import async_session
-# from sqlalchemy.ext.asyncio import AsyncSession
+from __future__ import annotations
+
+import contextlib
+
+from fastapi import Depends, status
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
+
+from api.database.async_session import AsyncSessionManager
+from api.utils import timeit
 
 
-# async def get_async_session() -> AsyncSession:
-#     session = async_session()
-#     try:
-#         async with async_session() as session:
-#             yield session
-#     except HTTPException:
-#         session.rollback()
-#         raise
-#     finally:
-#         session.close()
+async def get_async_session_stub():
+    raise NotImplementedError  # это реально тело этой функции
+
+# Dependency
+# @contextlib.asynccontextmanager
 
 
-# Base: DeclarativeMeta = declarative_base()
+async def get_async_session() -> AsyncSession:
+    SessionLocal: AsyncSession = AsyncSessionManager().AsyncSessionLocal
+    async with SessionLocal() as session:
+        try:
+            yield session
+        except Exception as e:
+            logger.error(e)
+            await session.rollback()
+            raise
+        else:
+            await session.commit()
+        finally:
+            await session.close()
 
 
-# async def get_async_session() -> AsyncSession:
-#     async with async_session() as session:
-#         yield session
+
+
+Base: DeclarativeMeta = declarative_base()
+
+
+__all__ = ["Base", "get_async_session"]

@@ -1,13 +1,15 @@
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import BaseSettings, HttpUrl
+from pydantic import BaseSettings, Field, HttpUrl
 
 
 class Settings(BaseSettings):
     APP_NAME: str
     APP_FOLDER: str
     APP_DEBUG: bool = False
+    DB_PROTOCOL: str | None = Field("postgresql")
+    DB_DRIVER: str | None = Field("asyncpg")
     SECRET_KEY: str
     ALGORITHM: str
     DB_HOST: str

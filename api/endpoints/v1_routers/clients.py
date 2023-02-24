@@ -4,7 +4,7 @@ from api.database.sqlalchemy_connection import get_session
 from api.schemas.client import ClientCreate, ClientDB, ClientUpdate
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-
+from sqlalchemy.ext.asyncio import AsyncSession
 router = APIRouter(
     prefix="/clients",
     tags=["Clients"],

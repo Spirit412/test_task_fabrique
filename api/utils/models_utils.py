@@ -1,4 +1,6 @@
-def update_model(db_model, model_update):
+def update_model(db_model,
+                 model_update):
+
     for var, value in vars(model_update).items():
         if vars(db_model).get(var) is None:
             continue

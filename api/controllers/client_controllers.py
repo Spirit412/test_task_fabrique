@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from api.models import models
 from api.responses.json_response import client_deleted_successfully, raise_client_not_found
 from api.responses.success import DELETED_SUCCESSFULLY
@@ -9,7 +9,7 @@ from api.services.clients_repository import ClientsRepository
 
 class ClientControllers:
     def __init__(self, session):
-        self.session: Session = session
+        self.session: AsyncSession = session
         self.clients_repository = ClientsRepository(session)
         self.logger = Logger(session)
 

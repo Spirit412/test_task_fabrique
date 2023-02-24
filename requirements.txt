@@ -2,8 +2,7 @@ fastapi[all]
 databases[postgresql]
 uvicorn[standard]
 asyncpg>=0.22.0
-psycopg2-binary>=2.8.6
-SQLAlchemy
+SQLAlchemy>=2.0
 SQLAlchemy-Utils
 alembic>=1.5.6
 
