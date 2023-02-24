@@ -1,19 +1,18 @@
 from __future__ import annotations
 
 import logging
-from logging.handlers import RotatingFileHandler
 import os
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
-
+from sqlalchemy.pool import AsyncAdaptedQueuePool
 from sqlalchemy.engine import Engine
-
-from sqlalchemy.ext.asyncio import AsyncEngine
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio import (AsyncEngine, AsyncSession,
+                                    async_sessionmaker, create_async_engine)
 from sqlalchemy.orm import sessionmaker
+
 from api.config import settings
 
-from .utils.db_url_builder import DbUrlEnvBuilder, DbUrlParams
+from .db_url_builder import DbUrlEnvBuilder, DbUrlParams
 
 # Проверяем наличие папки "logs" в корне. Если нет, создаём
 if settings.APP_DEBUG:
@@ -63,16 +62,21 @@ class AsyncSessionManager:
         sql_db_url = DbUriBuilderLocal().from_env().to_str()
         # Принудительно подключаем драйвер asyncpg независимо от DB_DRIVER
         # sql_db_url = DbUriBuilderLocal().from_env().driver("asyncpg")
-        self.async_engine = create_async_engine(sql_db_url, echo=settings.APP_DEBUG)
+        self.async_engine = create_async_engine(sql_db_url,
+                                                echo=settings.APP_DEBUG,
+                                                poolclass=AsyncAdaptedQueuePool,
+                                                future=True,
+                                                )
 
     @property
-    def AsyncSessionLocal(self) -> sessionmaker:
-        return sessionmaker(bind=self.async_engine,
-                            class_=AsyncSession,
-                            expire_on_commit=False,
-                            autoflush=True,
-                            autocommit=False,
-                            )
+    async def AsyncSessionLocal(self) -> async_sessionmaker:
+        return await async_sessionmaker(bind=self.async_engine,
+                                        class_=AsyncSession,
+                                        expire_on_commit=False,
+                                        autoflush=True,
+                                        autocommit=False,
+                                        future=True,
+                                        )
 
     @property
     def alchemy_engine(self) -> AsyncEngine:
@@ -81,10 +85,11 @@ class AsyncSessionManager:
 
 # SessionForCelery - Для Celery. Если использовать SessionManager().alchemy_engine в целери таск не проходит, ругается на ошибку
 # sessionmaker нет query
-AsyncSessionForCelery = sessionmaker(autocommit=False,
-                                     autoflush=False,
-                                     bind=AsyncSessionManager().alchemy_engine,
-                                     expire_on_commit=False,
-                                     )
+AsyncSessionForCelery = async_sessionmaker(autocommit=False,
+                                           autoflush=False,
+                                           bind=AsyncSessionManager().alchemy_engine,
+                                           expire_on_commit=False,
+                                           future=True,
+                                           )
 
 __all__ = ["AsyncSessionManager", "DbUriBuilderLocal", "AsyncSessionForCelery"]

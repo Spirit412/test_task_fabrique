@@ -1,14 +1,15 @@
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from api.models import models
+from api.repositories.messages_repository import MessagesRepository
 from api.responses.json_response import (message_deleted_successfully,
                                          raise_message_not_found)
-from api.services.messages_repository import MessagesRepository
 from api.utils.logger_util import Logger, LoggerActionsEnum, LoggerLevelsEnum
-from sqlalchemy.orm import Session
 
 
 class MessagesControllers:
     def __init__(self, session):
-        self.session: Session = session
+        self.session: AsyncSession = session
         self.messages_repository = MessagesRepository(session)
         self.logger = Logger(session)
 

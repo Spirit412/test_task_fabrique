@@ -1,10 +1,12 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from api.models import models
-from api.responses.json_response import client_deleted_successfully, raise_client_not_found
+from api.repositories.clients_repository import ClientsRepository
+from api.responses.json_response import (client_deleted_successfully,
+                                         raise_client_not_found)
 from api.responses.success import DELETED_SUCCESSFULLY
 from api.schemas.client import ClientCreate, ClientUpdate
 from api.utils.logger_util import Logger, LoggerActionsEnum, LoggerLevelsEnum
-from api.services.clients_repository import ClientsRepository
 
 
 class ClientControllers:

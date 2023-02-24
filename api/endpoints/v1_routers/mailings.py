@@ -1,10 +1,9 @@
 from api.controllers.mailings_controllers import MailingsControllers
-from api.database.decorators import managed_transaction
-from api.database.sqlalchemy_connection import get_session
+from api.database.sqlalchemy_async_connection import get_session
 from api.schemas.mailing import (MailingCreate, MailingDB,
                                  MailingUpdate)
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(
     prefix="/mailings",
@@ -14,7 +13,7 @@ router = APIRouter(
 
 
 @router.get("/", response_model=list[MailingDB])
-def get_mailings(session: Session = Depends(get_session),
+def get_mailings(session: AsyncSession = Depends(get_session),
                  ):
     """ Получает все рассылки. """
 
@@ -24,7 +23,7 @@ def get_mailings(session: Session = Depends(get_session),
 
 @router.get("/{mailing_id}", response_model=MailingDB)
 def get_mailing(mailing_id: int,
-                session: Session = Depends(get_session),
+                session: AsyncSession = Depends(get_session),
                 ):
     """ Получает рассылку по ID. """
 
@@ -33,9 +32,8 @@ def get_mailing(mailing_id: int,
 
 
 @router.post("/", response_model=MailingDB)
-@managed_transaction
 def add_mailing(mailing_create: MailingCreate,
-                session: Session = Depends(get_session),
+                session: AsyncSession = Depends(get_session),
                 ):
     """ Добавляет рассылку. """
     mailings_controllers = MailingsControllers(session)
@@ -44,10 +42,9 @@ def add_mailing(mailing_create: MailingCreate,
 
 
 @router.put("/{mailing_id}", response_model=MailingDB)
-@managed_transaction
 def update_mailing(mailing_id: int,
                    mailing_update: MailingUpdate,
-                   session: Session = Depends(get_session),
+                   session: AsyncSession = Depends(get_session),
                    ):
     """ Обновляет рассылку по ID. """
 
@@ -56,9 +53,8 @@ def update_mailing(mailing_id: int,
 
 
 @router.delete("/{mailing_id}")
-@managed_transaction
 def delete_mailing(mailing_id: int,
-                   session: Session = Depends(get_session),
+                   session: AsyncSession = Depends(get_session),
                    ):
     """ Удаляет рассылку по ID. """
 

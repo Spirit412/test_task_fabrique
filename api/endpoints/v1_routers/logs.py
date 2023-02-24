@@ -1,12 +1,12 @@
 from api.controllers.clients_logs_controllers import ClientLogsControllers
 from api.controllers.mailings_logs_controllers import MailingsLogsControllers
 from api.controllers.messages_logs_controllers import MessagesLogsControllers
-from api.database.sqlalchemy_connection import get_session
+from api.database.sqlalchemy_async_connection import get_session
 from api.schemas.logs.client_log import ClientLogDB
 from api.schemas.logs.mailing_log import MailingLogDB
 from api.schemas.logs.message_log import MessageLogDB
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(
     prefix="/logs",
@@ -16,7 +16,7 @@ router = APIRouter(
 
 
 @router.get("/clients", response_model=list[ClientLogDB])
-def get_clients_logs(session: Session = Depends(get_session),
+def get_clients_logs(session: AsyncSession = Depends(get_session),
                      ):
     """ Получает все логи операций с клиентами """
 
@@ -26,7 +26,7 @@ def get_clients_logs(session: Session = Depends(get_session),
 
 @router.get("/clients/{client_id}", response_model=list[ClientLogDB])
 def get_client_logs(client_id: int,
-                    session: Session = Depends(get_session),
+                    session: AsyncSession = Depends(get_session),
                     ):
     """ Получает все логи операций с клиентом по ID клиента """
 
@@ -35,7 +35,7 @@ def get_client_logs(client_id: int,
 
 
 @router.get("/mailings", response_model=list[MailingLogDB])
-def get_mailings_logs(session: Session = Depends(get_session),
+def get_mailings_logs(session: AsyncSession = Depends(get_session),
                       ):
     """ Получает все логи операций с рассылками """
 
@@ -45,7 +45,7 @@ def get_mailings_logs(session: Session = Depends(get_session),
 
 @router.get("/mailings/{mailing_id}", response_model=list[MailingLogDB])
 def get_mailing_logs(mailing_id: int,
-                     session: Session = Depends(get_session),
+                     session: AsyncSession = Depends(get_session),
                      ):
     """ Получает все логи операций с рассылкой по ID рассылки """
 
@@ -54,7 +54,7 @@ def get_mailing_logs(mailing_id: int,
 
 
 @router.get("/messages", response_model=list[MessageLogDB])
-def get_messages_logs(session: Session = Depends(get_session),
+def get_messages_logs(session: AsyncSession = Depends(get_session),
                       ):
     """ Получает все логи операций с сообщениями """
 
@@ -64,7 +64,7 @@ def get_messages_logs(session: Session = Depends(get_session),
 
 @router.get("/messages/{message_id}", response_model=list[MessageLogDB])
 def get_message_logs(message_id: int,
-                     session: Session = Depends(get_session),
+                     session: AsyncSession = Depends(get_session),
                      ):
     """ Получает все логи операций с сообщением по ID сообщения """
 

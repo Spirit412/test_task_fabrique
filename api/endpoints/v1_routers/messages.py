@@ -1,9 +1,8 @@
 from api.controllers.messages_controllers import MessagesControllers
-from api.database.decorators import managed_transaction
-from api.database.sqlalchemy_connection import get_session
+from api.database.sqlalchemy_async_connection import get_session
 from api.schemas.message import MessageDB, MessageDBWithAll
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(
     prefix="/messages",
@@ -13,7 +12,7 @@ router = APIRouter(
 
 
 @router.get("/", response_model=list[MessageDB])
-def get_messages(session: Session = Depends(get_session),
+def get_messages(session: AsyncSession = Depends(get_session),
                  ):
     """ Получает все сообщения. """
 
@@ -23,7 +22,7 @@ def get_messages(session: Session = Depends(get_session),
 
 @router.get("/{message_id}", response_model=MessageDBWithAll)
 def get_message(message_id: int,
-                session: Session = Depends(get_session),
+                session: AsyncSession = Depends(get_session),
                 ):
     """ Получает сообщение по ID. """
 
@@ -32,9 +31,8 @@ def get_message(message_id: int,
 
 
 @router.delete("/{message_id}")
-@managed_transaction
 def delete_message(message_id: int,
-                   session: Session = Depends(get_session),
+                   session: AsyncSession = Depends(get_session),
                    ):
     """ Удаляет сообщение по ID. """
 

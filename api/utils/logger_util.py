@@ -1,14 +1,17 @@
 import json
 
+from fastapi.encoders import jsonable_encoder
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from api.repositories.logs.client_logs_repository import ClientLogsRepository
+from api.repositories.logs.mailings_logs_repository import \
+    MailingsLogsRepository
+from api.repositories.logs.messages_logs_repository import \
+    MessagesLogsRepository
 from api.schemas.logs.client_log import ClientLogCreate
 from api.schemas.logs.log_base import LoggerActionsEnum, LoggerLevelsEnum
 from api.schemas.logs.mailing_log import MailingLogCreate
 from api.schemas.logs.message_log import MessageLogCreate
-from api.services.logs.client_logs_repository import ClientLogsRepository
-from api.services.logs.mailings_logs_repository import MailingsLogsRepository
-from api.services.logs.messages_logs_repository import MessagesLogsRepository
-from fastapi.encoders import jsonable_encoder
-from sqlalchemy.orm import Session
 
 
 class Logger:
@@ -17,7 +20,7 @@ class Logger:
     """
 
     def __init__(self, session):
-        self.session: Session = session
+        self.session: AsyncSession = session
 
         self._client_logs_repository = ClientLogsRepository(session)
         self._mailings_logs_repository = MailingsLogsRepository(session)

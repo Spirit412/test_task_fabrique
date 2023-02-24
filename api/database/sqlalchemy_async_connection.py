@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import contextlib
+from asyncio.log import logger
 
 from fastapi import Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 
 from api.database.async_session import AsyncSessionManager
-from api.utils import timeit
+from api.utils.timeit import timeit
 
 
 async def get_async_session_stub():
@@ -17,7 +18,7 @@ async def get_async_session_stub():
 # @contextlib.asynccontextmanager
 
 
-async def get_async_session() -> AsyncSession:
+async def get_session() -> AsyncSession:
     SessionLocal: AsyncSession = AsyncSessionManager().AsyncSessionLocal
     async with SessionLocal() as session:
         try:
@@ -32,9 +33,7 @@ async def get_async_session() -> AsyncSession:
             await session.close()
 
 
-
-
 Base: DeclarativeMeta = declarative_base()
 
 
-__all__ = ["Base", "get_async_session"]
+__all__ = ["Base", "get_session"]

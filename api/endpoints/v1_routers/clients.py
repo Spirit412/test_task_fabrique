@@ -1,9 +1,7 @@
 from api.controllers.client_controllers import ClientControllers
-from api.database.decorators import managed_transaction
-from api.database.sqlalchemy_connection import get_session
+from api.database.sqlalchemy_async_connection import get_session
 from api.schemas.client import ClientCreate, ClientDB, ClientUpdate
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 router = APIRouter(
     prefix="/clients",
@@ -13,7 +11,7 @@ router = APIRouter(
 
 
 @router.get("/", response_model=list[ClientDB])
-def get_clients(session: Session = Depends(get_session),
+def get_clients(session: AsyncSession = Depends(get_session),
                 ):
     """ Получает список всех клиентов. """
 
@@ -23,7 +21,7 @@ def get_clients(session: Session = Depends(get_session),
 
 @router.get("/{client_id}", response_model=ClientDB)
 def get_client(client_id: int,
-               session: Session = Depends(get_session),
+               session: AsyncSession = Depends(get_session),
                ):
     """ Получает клиента по ID. """
 
@@ -32,9 +30,8 @@ def get_client(client_id: int,
 
 
 @router.post("/")
-@managed_transaction
 def add_client(client_create: ClientCreate,
-               session: Session = Depends(get_session),
+               session: AsyncSession = Depends(get_session),
                ):
     """ Добавляет клиента. """
 
@@ -42,11 +39,10 @@ def add_client(client_create: ClientCreate,
     return client_controllers.create(model_create=client_create)
 
 
-@ router.put("/{client_id}", response_model=ClientDB)
-@managed_transaction
+@router.put("/{client_id}", response_model=ClientDB)
 def update_client(client_id: int,
                   client_update: ClientUpdate,
-                  session: Session = Depends(get_session),
+                  session: AsyncSession = Depends(get_session),
                   ):
     """ Обновляет клиента по ID. """
 
@@ -56,10 +52,9 @@ def update_client(client_id: int,
                                      )
 
 
-@ router.delete("/{client_id}")
-@ managed_transaction
+@router.delete("/{client_id}")
 def delete_client(client_id: int,
-                  session: Session = Depends(get_session),
+                  session: AsyncSession = Depends(get_session),
                   ):
     """ Удаляет клиента по ID. """
 

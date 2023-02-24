@@ -3,7 +3,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from api.schemas.message import Message, MessageDB  # noqa: F401
     from api.schemas.logs.mailing_log import MailingLog  # noqa: F401

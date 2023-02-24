@@ -1,4 +1,7 @@
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from api.models import models
+from api.repositories.mailings_repository import MailingsRepository
 from api.responses.json_response import (client_deleted_successfully,
                                          mailing_deleted_successfully,
                                          raise_client_not_found,
@@ -6,14 +9,12 @@ from api.responses.json_response import (client_deleted_successfully,
 from api.responses.success import DELETED_SUCCESSFULLY
 from api.schemas.client import ClientCreate, ClientDB, ClientUpdate
 from api.schemas.mailing import MailingCreate, MailingUpdate
-from api.services.mailings_repository import MailingsRepository
 from api.utils.logger_util import Logger, LoggerActionsEnum, LoggerLevelsEnum
-from sqlalchemy.orm import Session
 
 
 class MailingsControllers:
     def __init__(self, session):
-        self.session: Session = session
+        self.session: AsyncSession = session
         self.mailings_repository = MailingsRepository(session)
         self.logger = Logger(session)
 

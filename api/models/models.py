@@ -1,7 +1,7 @@
 import enum
 from datetime import *
 
-from api.database.sqlalchemy_connection import Base
+from api.database.sqlalchemy_async_connection import Base
 from sqlalchemy import (Column, DateTime, Enum, ForeignKey, Integer, String,
                         Text)
 from sqlalchemy.dialects.postgresql import JSONB

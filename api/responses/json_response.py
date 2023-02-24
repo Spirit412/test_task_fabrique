@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 
 ERROR_CONNECT_DB = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
-    detail='Ошибка соединения с БД',
+    detail="Ошибка соединения с БД",
     headers={"WWW-Authenticate": "Bearer"},
 )
 
@@ -20,7 +20,7 @@ def raise_client_not_found(client_id: int):
 def raise_phone_number_not_acceptable(phone_number: str):
     raise HTTPException(
         status_code=status.HTTP_406_NOT_ACCEPTABLE,
-        detail=f'Номер телефона: {phone_number} не прошел валидацию.',
+        detail=f"Номер телефона: {phone_number} не прошел валидацию.",
         headers={"WWW-Authenticate": "Bearer"},
     )
 
